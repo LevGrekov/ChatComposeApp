@@ -2,10 +2,11 @@ package ru.levgrekov.chat.ui
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import ru.levgrekov.io.JsonHelper
-import ru.levgrekov.io.Message
+import ru.levgrekov.chat.convertation.JsonHelper
+import ru.levgrekov.chat.support.Message
 
 class ChatState(val onSendRequest: (String)->Unit) {
+
     private var _recipient = mutableStateOf<String?>(null)
     var recipient: String?
         get() = _recipient.value

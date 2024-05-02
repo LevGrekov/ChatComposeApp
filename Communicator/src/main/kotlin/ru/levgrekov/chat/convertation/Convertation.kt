@@ -1,4 +1,4 @@
-package ru.smak.chat.convertation
+package ru.levgrekov.chat.convertation
 
 import java.nio.ByteBuffer
 import java.nio.charset.Charset

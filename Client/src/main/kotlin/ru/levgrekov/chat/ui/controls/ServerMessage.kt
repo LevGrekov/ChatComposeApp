@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.levgrekov.io.Message
+import ru.levgrekov.chat.support.Message
 
 @Composable
 fun ServerMessage(message: Message){

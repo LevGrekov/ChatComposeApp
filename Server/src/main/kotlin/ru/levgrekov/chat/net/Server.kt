@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import ru.smak.chat.net.ActionCompletionHandler
 import java.net.InetSocketAddress
 import java.nio.channels.AsynchronousServerSocketChannel
 import kotlin.coroutines.suspendCoroutine

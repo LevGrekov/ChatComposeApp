@@ -3,9 +3,7 @@ package ru.levgrekov.chat.net
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.smak.chat.convertation.toByteBuffer
-import ru.smak.chat.convertation.toString
-import ru.smak.chat.net.ActionCompletionHandler
+import ru.levgrekov.chat.convertation.toString
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousSocketChannel
 import kotlin.coroutines.suspendCoroutine
@@ -24,7 +22,11 @@ class Communicator(private val socket: AsynchronousSocketChannel){
         get() = !stop
 
     suspend fun send(data: String){
-        val buf = data.toByteBuffer()
+        val ba = data.toByteArray()
+        val buf = ByteBuffer.allocate(ba.size+Int.SIZE_BYTES)
+        buf.putInt(ba.size)
+        buf.put(ba)
+        buf.flip()
         try {
             val wroteBytesCount = suspendCoroutine{
                 socket.write(
@@ -32,26 +34,36 @@ class Communicator(private val socket: AsynchronousSocketChannel){
                     null,
                     ActionCompletionHandler(it)
                 )
-
             }
-
-        } catch(_: Throwable){
-            stop()
+        } catch(e: Throwable){
+            println("send: $e.message")
         }
     }
+
 
     fun startDataReceiving(onDataReceived:suspend (String)->Unit){
         communicatorScope.launch {
             try {
                 while (isAlive) {
-                    val bf = ByteBuffer.allocate(1024)
-                    val readBytesCount = suspendCoroutine {
-                        socket.read(bf, null, ActionCompletionHandler(it))
+                    var capacity = Int.SIZE_BYTES
+                    repeat(2) {
+                        val buf = ByteBuffer.allocate(capacity)
+                        val read = suspendCoroutine { c->
+                            socket.read(
+                                buf,
+                                null,
+                                ActionCompletionHandler(c)
+                            )
+                        }
+                        buf.flip()
+                        if(it == 0) {
+                            capacity = buf.getInt()
+                        } else {
+                            val data = buf.toString(Charsets.UTF_8)
+                            onDataReceived(data)
+                        }
+                        buf.clear()
                     }
-                    bf.flip()
-                    val data = bf.toString(Charsets.UTF_8)
-                    onDataReceived(data)
-
                 }
             } catch (_: Throwable){
                 stop()

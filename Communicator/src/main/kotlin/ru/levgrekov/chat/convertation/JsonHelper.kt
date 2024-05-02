@@ -3,6 +3,7 @@ package ru.levgrekov.chat.convertation
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+
 object JsonHelper {
     private val gson = Gson()
     private inline fun <reified T> Gson.fromJson(json: String): T =

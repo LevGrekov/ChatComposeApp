@@ -1,4 +1,4 @@
-package ru.levgrekov.io
+package ru.levgrekov.chat.support
 
 data class Message(
     val login: String,

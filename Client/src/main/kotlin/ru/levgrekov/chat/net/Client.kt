@@ -1,7 +1,6 @@
 package ru.levgrekov.chat.net
 
 import kotlinx.coroutines.*
-import ru.smak.chat.net.ActionCompletionHandler
 import java.net.InetSocketAddress
 import java.nio.channels.AsynchronousSocketChannel
 import kotlin.coroutines.suspendCoroutine
@@ -20,17 +19,15 @@ class Client(private val host: String = "localhost", private val port: Int = 510
             suspendCoroutine<Void> {
                 socket.connect(InetSocketAddress(host, port), null, ActionCompletionHandler(it))
             }
-            launch {
-                communicator.startDataReceiving { data ->
-                    serverDataReceivedListener.forEach {
-                        it(data)
-                    }
+            communicator.startDataReceiving { data ->
+                serverDataReceivedListener.forEach {
+                    it(data)
                 }
             }
         } catch (_: Throwable){}
     }
 
-    suspend fun sendRequest(request: String) = communicator.send(request)
+    fun sendRequest(request: String) = clientScope.launch { communicator.send(request) }
 
     fun stop() {
         clientScope.cancel()

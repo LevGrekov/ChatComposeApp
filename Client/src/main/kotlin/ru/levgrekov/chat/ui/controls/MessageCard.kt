@@ -21,7 +21,7 @@ import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.Envelope
 import compose.icons.lineawesomeicons.LongArrowAltRightSolid
 import compose.icons.lineawesomeicons.TrashAlt
-import ru.levgrekov.io.Message
+import ru.levgrekov.chat.support.Message
 import java.text.SimpleDateFormat
 import java.util.*
 

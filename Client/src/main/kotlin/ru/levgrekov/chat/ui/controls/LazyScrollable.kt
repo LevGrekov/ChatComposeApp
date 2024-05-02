@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import ru.levgrekov.io.Message
+import ru.levgrekov.chat.support.Message
 
 @Composable
 fun LazyScrollable(

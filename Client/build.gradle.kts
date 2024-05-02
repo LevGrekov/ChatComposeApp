@@ -19,8 +19,10 @@ dependencies {
     // compose.desktop.currentOs should be used in launcher-sourceSet
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation(compose.desktop.currentOs)
-
+    implementation("br.com.devsrsouza.compose.icons.jetbrains:line-awesome:1.0.0")
+    implementation(project(":Communicator"))
 }
 
 compose.desktop {

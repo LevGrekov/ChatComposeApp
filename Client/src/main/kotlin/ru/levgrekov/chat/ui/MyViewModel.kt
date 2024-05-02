@@ -1,23 +1,21 @@
 package ru.levgrekov.chat.ui
 import androidx.compose.runtime.mutableStateListOf
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import ru.levgrekov.chat.convertation.JsonHelper
 import ru.levgrekov.chat.net.Client
-import ru.levgrekov.io.JsonHelper
 
 class MyViewModel{
-    val viewScope = CoroutineScope(Dispatchers.Main + Job())
     private val stopListeners = mutableListOf<()->Unit>()
     private val dataReadyListeners = mutableListOf< (String)->Unit>()
     private var stop = false
 
     val okMessageState = OKMessageState()
-    val authState = AuthState(::sendRequest)
-    val chatState = ChatState(::sendRequest)
+    val authState = AuthState(::send)
+    val chatState = ChatState(::send)
+
+    private val client: Client?
 
     init {
-        try {
+        client = try {
             Client().apply {
                 addStopListener { stop() }
                 addDataReadyListener {  sendRequest(it)  }
@@ -27,6 +25,7 @@ class MyViewModel{
         }
         catch (ce: Exception){
             okMessageState.configure("404","")
+            null
         }
 
     }
@@ -37,7 +36,6 @@ class MyViewModel{
 
     private fun getResponse(response: String) {
         val data = JsonHelper.getMapFromJson(response)
-        println(response)
         if(data.containsKey("error")){
             okMessageState.configure("Ошибка",data["message"].toString())
         }
@@ -57,8 +55,6 @@ class MyViewModel{
                         }
                         else -> throw Exception()
                     }
-                } ?: run {
-
                 }
             }
             "MESSAGE" -> {
@@ -77,9 +73,10 @@ class MyViewModel{
         }
     }
 
-    private fun sendRequest(data: String) {
-        if (stop) stopListeners.forEach { it() }
-        dataReadyListeners.forEach { it(data) }
+    private fun send(data: String) {
+        client?.sendRequest(data)
+        //if (stop) stopListeners.forEach { it() }
+        //dataReadyListeners.forEach { it(data) }
     }
 
     fun exitRequest(){

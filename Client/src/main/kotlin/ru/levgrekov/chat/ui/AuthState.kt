@@ -1,7 +1,7 @@
 package ru.levgrekov.chat.ui
 
 import androidx.compose.runtime.mutableStateOf
-import ru.levgrekov.io.JsonHelper
+import ru.levgrekov.chat.convertation.JsonHelper
 
 class AuthState(val onSendRequest: (String)->Unit) {
     private var _showDialog = mutableStateOf(true)

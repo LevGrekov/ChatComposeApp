@@ -13,3 +13,4 @@ pluginManagement {
 }
 
 rootProject.name = "Client"
+includeFlat("Communicator")
